@@ -84,9 +84,41 @@ module.exports = function setupSocket(io) {
       socket.to(roomId).emit("pause");
     });
 
+    // SEEK EVENT
+    socket.on("seek", ({ roomId, time }) => {
+      const room = roomManager.getRoom(roomId);
+
+      if (!room) return;
+
+      if (!roomManager.isHost(roomId, socket.id)) {
+        return;
+      }
+
+      room.videoState.currentTime = time;
+
+      socket.to(roomId).emit("seek", { time });
+    });
+
+    // CHANGE VIDEO EVENT
+    socket.on("change_video", ({ roomId, videoId }) => {
+      const room = roomManager.getRoom(roomId);
+
+      if (!room) return;
+
+      if (!roomManager.isHost(roomId, socket.id)) {
+        return;
+      }
+
+      room.videoState.videoId = videoId;
+      room.videoState.currentTime = 0;
+      room.videoState.isPlaying = false;
+
+      io.to(roomId).emit("change_video", { videoId });
+    });
+    
     // DISCONNECT
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);
     });
-  });
+  };);
 };
