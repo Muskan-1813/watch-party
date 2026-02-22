@@ -18,24 +18,10 @@ export default function YouTubePlayer({ videoId, roomId, role }: Props) {
 
   const playerRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const currentVideoIdRef = useRef<string>("");
 
+  // Load API once
   useEffect(() => {
-
-    const loadYouTubeAPI = () => {
-
-      if (window.YT) {
-        createPlayer();
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.src = "https://www.youtube.com/iframe_api";
-      script.async = true;
-
-      window.onYouTubeIframeAPIReady = createPlayer;
-
-      document.body.appendChild(script);
-    };
 
     const createPlayer = () => {
 
@@ -50,7 +36,7 @@ export default function YouTubePlayer({ videoId, roomId, role }: Props) {
         events: {
 
           onReady: () => {
-            console.log("Player Ready");
+            currentVideoIdRef.current = videoId;
           },
 
           onStateChange: (event: any) => {
@@ -77,10 +63,41 @@ export default function YouTubePlayer({ videoId, roomId, role }: Props) {
 
     };
 
-    loadYouTubeAPI();
+    if (!window.YT) {
+
+      const script = document.createElement("script");
+      script.src = "https://www.youtube.com/iframe_api";
+
+      window.onYouTubeIframeAPIReady = createPlayer;
+
+      document.body.appendChild(script);
+
+    } else {
+
+      createPlayer();
+
+    }
 
   }, []);
 
+
+
+  // Handle video change safely
+  useEffect(() => {
+
+    if (!playerRef.current) return;
+
+    if (currentVideoIdRef.current === videoId) return;
+
+    playerRef.current.loadVideoById(videoId);
+
+    currentVideoIdRef.current = videoId;
+
+  }, [videoId]);
+
+
+
+  // Receive socket events
   useEffect(() => {
 
     socket.on("play", () => {
@@ -95,14 +112,54 @@ export default function YouTubePlayer({ videoId, roomId, role }: Props) {
 
     });
 
+    socket.on("seek", ({ time }) => {
+
+      playerRef.current?.seekTo(time, true);
+
+    });
+
+    socket.on("change_video", ({ videoId }) => {
+
+      playerRef.current?.loadVideoById(videoId);
+
+    });
+
     return () => {
 
       socket.off("play");
       socket.off("pause");
+      socket.off("seek");
+      socket.off("change_video");
 
     };
 
   }, []);
+
+
+
+  // Seek sync (host only)
+  useEffect(() => {
+
+    if (role !== "host") return;
+
+    const interval = setInterval(() => {
+
+      if (!playerRef.current) return;
+
+      const time = playerRef.current.getCurrentTime();
+
+      socket.emit("seek", {
+        roomId,
+        time
+      });
+
+    }, 2000);
+
+    return () => clearInterval(interval);
+
+  }, []);
+
+
 
   return <div ref={containerRef}></div>;
 

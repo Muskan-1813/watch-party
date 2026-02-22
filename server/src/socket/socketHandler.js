@@ -31,9 +31,7 @@ module.exports = function setupSocket(io) {
 
       const participants = roomManager.getParticipants(roomId);
 
-      io.to(roomId).emit("user_joined", {
-        participants,
-      });
+      io.to(roomId).emit("user_joined", { participants });
 
       callback({
         roomId,
@@ -51,18 +49,14 @@ module.exports = function setupSocket(io) {
 
       const participants = roomManager.getParticipants(roomId);
 
-      io.to(roomId).emit("user_left", {
-        participants,
-      });
+      io.to(roomId).emit("user_left", { participants });
     });
 
-    // ✅ PLAY EVENT
+    // PLAY EVENT
     socket.on("play", ({ roomId }) => {
       const room = roomManager.getRoom(roomId);
-
       if (!room) return;
 
-      // only host allowed
       if (!roomManager.isHost(roomId, socket.id)) return;
 
       room.videoState.isPlaying = true;
@@ -70,13 +64,11 @@ module.exports = function setupSocket(io) {
       socket.to(roomId).emit("play");
     });
 
-    // ✅ PAUSE EVENT
+    // PAUSE EVENT
     socket.on("pause", ({ roomId }) => {
       const room = roomManager.getRoom(roomId);
-
       if (!room) return;
 
-      // only host allowed
       if (!roomManager.isHost(roomId, socket.id)) return;
 
       room.videoState.isPlaying = false;
@@ -87,12 +79,9 @@ module.exports = function setupSocket(io) {
     // SEEK EVENT
     socket.on("seek", ({ roomId, time }) => {
       const room = roomManager.getRoom(roomId);
-
       if (!room) return;
 
-      if (!roomManager.isHost(roomId, socket.id)) {
-        return;
-      }
+      if (!roomManager.isHost(roomId, socket.id)) return;
 
       room.videoState.currentTime = time;
 
@@ -102,12 +91,9 @@ module.exports = function setupSocket(io) {
     // CHANGE VIDEO EVENT
     socket.on("change_video", ({ roomId, videoId }) => {
       const room = roomManager.getRoom(roomId);
-
       if (!room) return;
 
-      if (!roomManager.isHost(roomId, socket.id)) {
-        return;
-      }
+      if (!roomManager.isHost(roomId, socket.id)) return;
 
       room.videoState.videoId = videoId;
       room.videoState.currentTime = 0;
@@ -115,10 +101,10 @@ module.exports = function setupSocket(io) {
 
       io.to(roomId).emit("change_video", { videoId });
     });
-    
+
     // DISCONNECT
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);
     });
-  };);
+  });
 };

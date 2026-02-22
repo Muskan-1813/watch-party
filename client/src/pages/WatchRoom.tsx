@@ -1,3 +1,4 @@
+
 import YouTubePlayer from "../components/YouTubePlayer";
 import { useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -22,9 +23,26 @@ export default function WatchRoom() {
   };
 
   const [participants, setParticipants] = useState<Participant[]>(initialParticipants);
+  const [videoInput, setVideoInput] = useState<string>("");
+  const [videoId, setVideoId] = useState<string>("dQw4w9WgXcQ"); 
+  const changeVideo = () => {
 
+  if (role !== "host") {
+    alert("Only host can change video");
+    return;
+  }
+
+  socket.emit("change_video", {
+    roomId,
+    videoId: videoInput
+  });
+
+  setVideoId(videoInput);
+};
   useEffect(() => {
-
+    socket.on("change_video", ({ videoId }) => {
+    setVideoId(videoId);
+});
     socket.on("user_joined", (data: { participants: Participant[] }) => {
       setParticipants(data.participants);
     });
@@ -57,12 +75,26 @@ export default function WatchRoom() {
       </ul>
 
       <hr />
+      <br />
 
-      <div>
+        <input
+        placeholder="Enter YouTube Video ID"
+        value={videoInput}
+        onChange={(e) => setVideoInput(e.target.value)}
+        />
+
+        <button onClick={changeVideo}>
+        Change Video
+        </button>
+
+        <br /><br />
+            <div>
         <YouTubePlayer
-         videoId="dQw4w9WgXcQ"
-         roomId={roomId!}
-        role={role} />
+            videoId={videoId}
+            roomId={roomId!}
+            role={role}
+            />
+        
       </div>
 
     </div>
