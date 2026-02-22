@@ -1,118 +1,61 @@
-🎬 Watch Party
+# 📺 YouTube Watch Party
 
-A real-time Watch Party application built with TypeScript, featuring a WebSocket-powered backend and a modern frontend client.
+A real-time, synchronized YouTube player built with React, Node.js, and WebSockets. Watch videos together with friends, synchronized down to the second.
 
-Users can create rooms, join friends, and watch content together in sync.
+## 🚀 Features
+- **Real-time Sync**: Play, pause, and seek actions are broadcast instantly to all room participants.
+- **Room-based Architecture**: Create or join specific rooms with unique codes.
+- **Role-Based Access (RBAC)**:
+  - **Host**: Full control over playback, roles, and participants.
+  - **Moderator**: Can control playback and change videos.
+  - **Participant/Viewer**: Watch-only access.
+- **Auto-Sync**: Automatically catches up users who fall behind due to network lag.
+- **Premium UI**: Modern dark-mode design with glassmorphism and smooth animations.
 
-📁 Project Structure
-watch-party/
-  ├── server/
-  │     ├── src/
-  │     │     ├── index.ts
-  │     │     ├── RoomManager.ts
-  │     │     ├── types.ts
-  │     ├── package.json
-  │     └── tsconfig.json
-  │
-  ├── client/
-  │     ├── src/
-  │     │     ├── main.tsx
-  │     │     ├── App.tsx
-  │     │     ├── pages/
-  │     │     ├── components/
-  │     ├── package.json
-  │
-  └── README.md
-🚀 Features
+## 🛠️ Tech Stack
+- **Frontend**: React, TypeScript, Vite, Socket.IO Client, Lucide React, Framer Motion.
+- **Backend**: Node.js, Express, Socket.IO, TypeScript.
+- **Real-time**: WebSocket (Socket.IO) for bi-directional communication.
 
-🏠 Create & Join Rooms
+## 📖 Documentation
+- For a **non-technical explanation** of how this works, see [DOCUMENTATION.md](./DOCUMENTATION.md).
+- For the **Technical Walkthrough**, see the project artifacts.
 
-🔄 Real-time video sync (Play / Pause / Seek)
+## 💻 Local Setup
 
-👥 Multiple participants per room
+### 1. Clone the repository
+```bash
+git clone <repository-url>
+cd assign
+```
 
-⚡ WebSocket-based communication
-
-🧠 Centralized room state management
-
-🛠️ Tech Stack
-Backend (Server)
-
-Node.js
-
-TypeScript
-
-WebSocket (ws)
-
-Frontend (Client)
-
-React
-
-TypeScript
-
-Vite
-
-⚙️ Installation & Setup
-1️⃣ Clone the Repository
-git clone <your-repo-url>
-cd watch-party
-2️⃣ Setup Server
-cd server
+### 2. Setup Backend
+```bash
+cd backend
 npm install
 npm run dev
+```
+The server will start on `http://localhost:3001`.
 
-Server will start on:
-
-http://localhost:3000
-3️⃣ Setup Client
-
-Open a new terminal:
-
-cd client
+### 3. Setup Frontend
+```bash
+cd frontend
 npm install
 npm run dev
+```
+The application will be available at `http://localhost:5173`.
 
-Client will start on:
+## 🌐 Deployment
+This application can be deployed to platforms like **Render**, **Railway**, or **Vercel** (with a separate WebSocket server).
+- **Public URL**: `https://your-watch-party.onrender.com` (Example)
 
-http://localhost:5173
-🧩 How It Works
+## 🏗️ Architecture Overview
+The system uses a **Centralized State Model** managed by the backend. 
+1. When a user joins a room, they connect via **Socket.IO**.
+2. Actions like `play` or `seek` are sent to the server.
+3. The server validates the user's **Role**.
+4. If authorized, the server updates the room state and **broadcasts** the update to all other connected clients in that room.
+5. The frontend uses the **YouTube IFrame API** to programmatically control the video player based on these broadcasts.
 
-RoomManager.ts
-Handles creation, deletion, and synchronization of rooms.
-
-index.ts
-Initializes the WebSocket server and handles connections.
-
-types.ts
-Defines shared TypeScript interfaces and message types.
-
-client/
-Handles UI, WebSocket connection, and event emission.
-
-📡 WebSocket Events (Example)
-// Client -> Server
-CREATE_ROOM
-JOIN_ROOM
-PLAY
-PAUSE
-SEEK
-
-// Server -> Clients
-ROOM_CREATED
-ROOM_JOINED
-SYNC_STATE
-🧪 Future Improvements
-
-🎥 Video URL input support
-
-💬 Real-time chat
-
-🔐 Authentication
-
-🌍 Deployment (Render / Railway / Vercel)
-
-📱 Responsive UI
-
-📜 License
-
-MIT License
+---
+Built with ❤️ for the Intern Assignment.
