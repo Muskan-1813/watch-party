@@ -10,15 +10,12 @@ class RoomManager {
 
     const room = {
       id: roomId,
-
       host: hostSocketId,
-
       videoState: {
         videoId: "dQw4w9WgXcQ",
         currentTime: 0,
         isPlaying: false,
       },
-
       participants: new Map(),
     };
 
@@ -35,10 +32,7 @@ class RoomManager {
 
   joinRoom(roomId, socketId, username) {
     const room = this.rooms.get(roomId);
-
-    if (!room) {
-      return null;
-    }
+    if (!room) return null;
 
     room.participants.set(socketId, {
       socketId,
@@ -51,7 +45,6 @@ class RoomManager {
 
   leaveRoom(roomId, socketId) {
     const room = this.rooms.get(roomId);
-
     if (!room) return;
 
     room.participants.delete(socketId);
@@ -67,7 +60,6 @@ class RoomManager {
 
   getParticipants(roomId) {
     const room = this.rooms.get(roomId);
-
     if (!room) return [];
 
     return Array.from(room.participants.values());
@@ -75,35 +67,31 @@ class RoomManager {
 
   isHost(roomId, socketId) {
     const room = this.rooms.get(roomId);
-
     if (!room) return false;
 
     return room.host === socketId;
   }
+
+  // 🔥 NEW METHODS BELOW
+
+  assignRole(roomId, targetSocketId, newRole) {
+    const room = this.rooms.get(roomId);
+    if (!room) return null;
+
+    const participant = room.participants.get(targetSocketId);
+    if (!participant) return null;
+
+    participant.role = newRole;
+
+    return participant;
+  }
+
+  removeParticipant(roomId, targetSocketId) {
+    const room = this.rooms.get(roomId);
+    if (!room) return;
+
+    room.participants.delete(targetSocketId);
+  }
 }
-assignRole(roomId, targetSocketId, newRole) {
 
-  const room = this.rooms.get(roomId);
-
-  if (!room) return null;
-
-  const participant = room.participants.get(targetSocketId);
-
-  if (!participant) return null;
-
-  participant.role = newRole;
-
-  return participant;
-}
-
-
-removeParticipant(roomId, targetSocketId) {
-
-  const room = this.rooms.get(roomId);
-
-  if (!room) return;
-
-  room.participants.delete(targetSocketId);
-
-}
 module.exports = new RoomManager();
