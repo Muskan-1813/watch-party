@@ -16,11 +16,11 @@ declare global {
     }
 }
 
-export const Player = ({ videoId, playing, currentTime, canControl, onStateChange, onSeek }: PlayerProps) => {
+export const Player = ({ videoId, playing, currentTime, canControl, onStateChange}: PlayerProps) => {
     const playerRef = useRef<any>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const [isReady, setIsReady] = useState(false);
-    const lastUpdateRef = useRef<number>(0);
+    
 
     useEffect(() => {
         // Load YouTube API if not already loaded

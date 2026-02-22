@@ -1,9 +1,9 @@
-import { useEffect, useState, useRef } from 'react';
+import { useState} from 'react';
 import { io, Socket } from 'socket.io-client';
 import { Player } from './Player';
 import { ParticipantList } from './ParticipantList';
 import { LandingPage } from './LandingPage';
-import type { RoomState, Role, ParticipantState } from '../types';
+import type { RoomState, Role } from '../types';
 import { Share2, Video, Send, AlertCircle } from 'lucide-react';
 
 const SOCKET_URL = 'http://localhost:3001';
@@ -11,7 +11,7 @@ const SOCKET_URL = 'http://localhost:3001';
 export const WatchRoom = () => {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [roomState, setRoomState] = useState<RoomState | null>(null);
-    const [username, setUsername] = useState<string | null>(null);
+    const [_username, setUsername] = useState<string | null>(null);
     const [joined, setJoined] = useState(false);
     const [videoUrl, setVideoUrl] = useState('');
     const [error, setError] = useState<string | null>(null);
