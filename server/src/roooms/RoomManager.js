@@ -81,5 +81,29 @@ class RoomManager {
     return room.host === socketId;
   }
 }
+assignRole(roomId, targetSocketId, newRole) {
 
+  const room = this.rooms.get(roomId);
+
+  if (!room) return null;
+
+  const participant = room.participants.get(targetSocketId);
+
+  if (!participant) return null;
+
+  participant.role = newRole;
+
+  return participant;
+}
+
+
+removeParticipant(roomId, targetSocketId) {
+
+  const room = this.rooms.get(roomId);
+
+  if (!room) return;
+
+  room.participants.delete(targetSocketId);
+
+}
 module.exports = new RoomManager();
