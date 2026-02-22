@@ -59,7 +59,10 @@ export default function WatchRoom() {
       <hr />
 
       <div>
-        <YouTubePlayer videoId="dQw4w9WgXcQ" />
+        <YouTubePlayer
+         videoId="dQw4w9WgXcQ"
+         roomId={roomId!}
+        role={role} />
       </div>
 
     </div>

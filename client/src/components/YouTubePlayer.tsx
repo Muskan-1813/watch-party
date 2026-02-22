@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { socket } from "../socket/socket";
 
 declare global {
   interface Window {
@@ -9,9 +10,11 @@ declare global {
 
 interface Props {
   videoId: string;
+  roomId: string;
+  role: string;
 }
 
-export default function YouTubePlayer({ videoId }: Props) {
+export default function YouTubePlayer({ videoId, roomId, role }: Props) {
 
   const playerRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,29 +42,68 @@ export default function YouTubePlayer({ videoId }: Props) {
       if (!containerRef.current) return;
 
       playerRef.current = new window.YT.Player(containerRef.current, {
+
         height: "400",
         width: "700",
-        videoId: videoId,
-        playerVars: {
-          autoplay: 0
-        },
+        videoId,
+
         events: {
+
           onReady: () => {
-            console.log("YouTube Player Ready");
+            console.log("Player Ready");
+          },
+
+          onStateChange: (event: any) => {
+
+            if (role !== "host") return;
+
+            if (event.data === window.YT.PlayerState.PLAYING) {
+
+              socket.emit("play", { roomId });
+
+            }
+
+            if (event.data === window.YT.PlayerState.PAUSED) {
+
+              socket.emit("pause", { roomId });
+
+            }
+
           }
+
         }
+
       });
 
     };
 
     loadYouTubeAPI();
 
-  }, [videoId]);
+  }, []);
 
-  return (
-    <div>
-      <div ref={containerRef}></div>
-    </div>
-  );
+  useEffect(() => {
+
+    socket.on("play", () => {
+
+      playerRef.current?.playVideo();
+
+    });
+
+    socket.on("pause", () => {
+
+      playerRef.current?.pauseVideo();
+
+    });
+
+    return () => {
+
+      socket.off("play");
+      socket.off("pause");
+
+    };
+
+  }, []);
+
+  return <div ref={containerRef}></div>;
 
 }
