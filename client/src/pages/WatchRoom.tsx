@@ -40,6 +40,18 @@ export default function WatchRoom() {
   setVideoId(videoInput);
 };
   useEffect(() => {
+    socket.on("role_updated", ({ participants }) => {
+  setParticipants(participants);
+});
+
+socket.on("participant_removed", ({ participants }) => {
+  setParticipants(participants);
+});
+
+socket.on("removed", () => {
+  alert("You were removed from the room");
+  window.location.href = "/";
+});
     socket.on("change_video", ({ videoId }) => {
     setVideoId(videoId);
 });
@@ -66,13 +78,40 @@ export default function WatchRoom() {
 
       <h4>Participants:</h4>
 
-      <ul>
-        {participants.map((p) => (
-          <li key={p.socketId}>
-            {p.username} ({p.role})
-          </li>
-        ))}
-      </ul>
+     <ul>
+  {participants.map((p) => (
+    <li key={p.socketId}>
+      {p.username} ({p.role})
+
+      {role === "host" && p.socketId !== socket.id && (
+        <>
+          <button
+            onClick={() =>
+              socket.emit("assign_role", {
+                roomId,
+                targetSocketId: p.socketId,
+                role: "moderator"
+              })
+            }
+          >
+            Make Moderator
+          </button>
+
+          <button
+            onClick={() =>
+              socket.emit("remove_participant", {
+                roomId,
+                targetSocketId: p.socketId
+              })
+            }
+          >
+            Remove
+          </button>
+        </>
+      )}
+    </li>
+  ))}
+</ul>
 
       <hr />
       <br />
