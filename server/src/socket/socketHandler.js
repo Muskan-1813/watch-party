@@ -102,9 +102,37 @@ module.exports = function setupSocket(io) {
       io.to(roomId).emit("change_video", { videoId });
     });
 
+    // ASSIGN ROLE
+    socket.on("assign_role", ({ roomId, targetSocketId, role }) => {
+      if (!roomManager.isHost(roomId, socket.id)) return;
+
+      roomManager.assignRole(roomId, targetSocketId, role);
+
+      const participants = roomManager.getParticipants(roomId);
+
+      io.to(roomId).emit("role_updated", {
+        participants,
+      });
+    });
+
+    // REMOVE PARTICIPANT
+    socket.on("remove_participant", ({ roomId, targetSocketId }) => {
+      if (!roomManager.isHost(roomId, socket.id)) return;
+
+      roomManager.removeParticipant(roomId, targetSocketId);
+
+      io.to(targetSocketId).emit("removed");
+
+      const participants = roomManager.getParticipants(roomId);
+
+      io.to(roomId).emit("participant_removed", {
+        participants,
+      });
+    });
+
     // DISCONNECT
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);
     });
-  });
+  };);
 };
