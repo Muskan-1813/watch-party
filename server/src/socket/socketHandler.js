@@ -4,6 +4,7 @@ module.exports = function setupSocket(io) {
   io.on("connection", (socket) => {
     console.log("User connected:", socket.id);
 
+    // CREATE ROOM
     socket.on("create_room", ({ username }, callback) => {
       const room = roomManager.createRoom(socket.id, username);
 
@@ -17,6 +18,7 @@ module.exports = function setupSocket(io) {
       });
     });
 
+    // JOIN ROOM
     socket.on("join_room", ({ roomId, username }, callback) => {
       const room = roomManager.joinRoom(roomId, socket.id, username);
 
@@ -41,6 +43,7 @@ module.exports = function setupSocket(io) {
       });
     });
 
+    // LEAVE ROOM
     socket.on("leave_room", ({ roomId }) => {
       roomManager.leaveRoom(roomId, socket.id);
 
@@ -53,6 +56,35 @@ module.exports = function setupSocket(io) {
       });
     });
 
+    // ✅ PLAY EVENT
+    socket.on("play", ({ roomId }) => {
+      const room = roomManager.getRoom(roomId);
+
+      if (!room) return;
+
+      // only host allowed
+      if (!roomManager.isHost(roomId, socket.id)) return;
+
+      room.videoState.isPlaying = true;
+
+      socket.to(roomId).emit("play");
+    });
+
+    // ✅ PAUSE EVENT
+    socket.on("pause", ({ roomId }) => {
+      const room = roomManager.getRoom(roomId);
+
+      if (!room) return;
+
+      // only host allowed
+      if (!roomManager.isHost(roomId, socket.id)) return;
+
+      room.videoState.isPlaying = false;
+
+      socket.to(roomId).emit("pause");
+    });
+
+    // DISCONNECT
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);
     });

@@ -1,3 +1,4 @@
+import YouTubePlayer from "../components/YouTubePlayer";
 import { useLocation, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { socket } from "../socket/socket";
@@ -58,7 +59,7 @@ export default function WatchRoom() {
       <hr />
 
       <div>
-        <h3>YouTube Player Coming Next...</h3>
+        <YouTubePlayer videoId="dQw4w9WgXcQ" />
       </div>
 
     </div>
