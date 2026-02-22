@@ -1,10 +1,21 @@
 import { useState } from "react";
-import { socket } from "../socket/socket.ts";
+import { socket } from "../socket/socket";
+import { useNavigate } from "react-router-dom";
+
+interface CreateRoomResponse {
+  roomId: string;
+  role: string;
+  participants: any[];
+  videoState: any;
+  error?: string;
+}
 
 export default function Home() {
 
   const [username, setUsername] = useState<string>("");
   const [roomId, setRoomId] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const createRoom = () => {
 
@@ -15,11 +26,21 @@ export default function Home() {
 
     socket.connect();
 
-    socket.emit("create_room", { username }, (response: any) => {
+    socket.emit("create_room", { username }, (response: CreateRoomResponse) => {
 
-      console.log("Room created:", response);
+      if (response.error) {
+        alert(response.error);
+        return;
+      }
 
-      alert("Room created: " + response.roomId);
+      navigate(`/room/${response.roomId}`, {
+        state: {
+          role: response.role,
+          participants: response.participants,
+          videoState: response.videoState,
+          username
+        }
+      });
 
     });
 
@@ -34,25 +55,28 @@ export default function Home() {
 
     socket.connect();
 
-    socket.emit("join_room", { roomId, username }, (response: any) => {
+    socket.emit("join_room", { roomId, username }, (response: CreateRoomResponse) => {
 
       if (response.error) {
         alert(response.error);
         return;
       }
 
-      console.log("Joined room:", response);
-
-      alert("Joined room");
+      navigate(`/room/${roomId}`, {
+        state: {
+          role: response.role,
+          participants: response.participants,
+          videoState: response.videoState,
+          username
+        }
+      });
 
     });
 
   };
 
   return (
-
     <div style={{ padding: 20 }}>
-
       <h1>Watch Party</h1>
 
       <input
@@ -80,9 +104,6 @@ export default function Home() {
       <button onClick={joinRoom}>
         Join Room
       </button>
-
     </div>
-
   );
-
 }
