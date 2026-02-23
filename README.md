@@ -25,8 +25,8 @@ A real-time, synchronized YouTube player built with React, Node.js, and WebSocke
 
 ### 1. Clone the repository
 ```bash
-git clone <repository-url>
-cd assign
+git clone https://github.com/Muskan-1813/watch-party.git
+cd watch-party
 ```
 
 ### 2. Setup Backend
@@ -46,8 +46,8 @@ npm run dev
 The application will be available at `http://localhost:5173`.
 
 ## 🌐 Deployment
-This application can be deployed to platforms like **Render**, **Railway**, or **Vercel** (with a separate WebSocket server).
-- **Public URL**: `https://your-watch-party.onrender.com` (Example)
+This application is deployed and live at the following URL:
+- **Live URL**: [https://watch-party-sandy.vercel.app](https://watch-party-sandy.vercel.app)
 
 ## 🏗️ Architecture Overview
 The system uses a **Centralized State Model** managed by the backend. 
