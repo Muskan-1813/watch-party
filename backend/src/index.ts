@@ -5,7 +5,10 @@ import cors from 'cors';
 import { Room } from './classes/Room';
 
 const app = express();
-app.use(cors());
+app.use(cors({
+    origin:"watch-party-sandy.vercel.app",
+    methods:["GET","POST"]
+}));
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {

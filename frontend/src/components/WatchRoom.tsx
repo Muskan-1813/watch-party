@@ -6,7 +6,7 @@ import { LandingPage } from './LandingPage';
 import type { RoomState, Role } from '../types';
 import { Share2, Video, Send, AlertCircle } from 'lucide-react';
 
-const SOCKET_URL = 'http://localhost:3001';
+const SOCKET_URL = 'https://watch-party-backend-97x3.onrender.com';
 
 export const WatchRoom = () => {
     const [socket, setSocket] = useState<Socket | null>(null);
