@@ -1,0 +1,34 @@
+/* Responsive Grid */
+.watch-grid {
+  height: 100%;
+}
+
+@media (max-width: 1024px) {
+  .watch-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+}
+
+/* Stack layout on mobile */
+@media (max-width: 768px) {
+  .watch-grid {
+    display: flex !important;
+    flex-direction: column;
+  }
+}
+@media (max-width: 1024px) {
+  .participants-panel {
+    max-height: none;
+  }
+}
+@media (max-width: 480px) {
+  .landing-card {
+    padding: 24px !important;
+  }
+}
+@media (max-width: 768px) {
+  .container {
+    padding: 12px !important;
+  }
+}

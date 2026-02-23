@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap");
+@import "tailwindcss";
 :root {
   --bg-color: #050505;
   --surface-color: #121212;
@@ -21,15 +21,18 @@
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   background-color: var(--bg-color);
   color: var(--text-primary);
   line-height: 1.5;
   overflow-x: hidden;
 }
 
-h1, h2, h3, h4 {
-  font-family: 'Outfit', sans-serif;
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Outfit", sans-serif;
 }
 
 .glass {
@@ -104,10 +107,22 @@ h1, h2, h3, h4 {
   letter-spacing: 0.5px;
 }
 
-.badge-host { background: #f59e0b; color: black; }
-.badge-moderator { background: #8b5cf6; color: white; }
-.badge-participant { background: #3b82f6; color: white; }
-.badge-viewer { background: #71717a; color: white; }
+.badge-host {
+  background: #f59e0b;
+  color: black;
+}
+.badge-moderator {
+  background: #8b5cf6;
+  color: white;
+}
+.badge-participant {
+  background: #3b82f6;
+  color: white;
+}
+.badge-viewer {
+  background: #71717a;
+  color: white;
+}
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {

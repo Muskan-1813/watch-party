@@ -25,7 +25,7 @@ export const LandingPage = ({ onJoin }: LandingPageProps) => {
 
     return (
         <div className="container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div className="glass" style={{ width: '100%', maxWidth: '400px', padding: '40px', textAlign: 'center' }}>
+            <div className="glass landing-card" style={{ width: '100%', maxWidth: '400px', padding: '40px', textAlign: 'center' }}>
                 <div style={{ marginBottom: '32px' }}>
                     <div style={{ width: '64px', height: '64px', background: 'var(--primary-color)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', boxShadow: '0 0 20px var(--primary-glow)' }}>
                         <Play fill="white" size={32} />
